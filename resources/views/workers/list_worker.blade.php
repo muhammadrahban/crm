@@ -44,9 +44,13 @@
                             <tr>
                                 <td>{{$user->id}}</td>
                                 <td>{{$user->name}}</td>
-                                <td>{{$user->is_admin ? "Admin" : "worker"}}</td>
-                                <td>{{$user->status ? "Active" : "Inactive"}}</td>
+                                <td>{{$user->is_admin == '1' ? "Admin" : "worker"}}</td>
+                                <td>{{$user->status == '1' ? "Active" : "Inactive"}}</td>
                                 <td>{{$user->created_at->diffForHumans() }}</td>
+                                <td>
+                                    <a href="{{route('worker.edit', $user->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
+                                    <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                </td>
                             </tr>
                         @endforeach
 

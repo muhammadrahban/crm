@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class WorkerController extends Controller
 {
@@ -25,7 +26,8 @@ class WorkerController extends Controller
      */
     public function create()
     {
-        return view('workers.add_worker');
+        $isEdit = false;
+        return view('workers.add_worker', compact('isEdit'));
     }
 
     /**
@@ -36,7 +38,24 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'                      =>  'required|max:255|unique:users,name',
+            'password'                  =>  'required',
+            'is_admin'                  =>  'required',
+            'status'                    =>  'required',
+            'device_token'              =>  'nullable',
+        ]);
+
+        $input                      =   $request->all();
+        if($request->is_admin == '1'){
+            $input['is_admin']          =   "1";
+        }else{
+            $input['is_admin']          =   "2";
+        }
+        $input['password']          =   Hash::make($input['password']);
+        $user                       =   User::create($input);
+
+        return redirect()->route('worker.index');
     }
 
     /**
@@ -58,7 +77,9 @@ class WorkerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $isEdit = true;
+        $user = User::find($id);
+        return view('workers.add_worker', compact('isEdit', 'user'));
     }
 
     /**
@@ -70,7 +91,22 @@ class WorkerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'is_admin'      =>  'required',
+            'status'        =>  'required',
+            'device_token'  =>  'nullable',
+        ]);
+
+        $input              =  $request->all();
+        if($request->is_admin == '1'){
+            $input['is_admin']  = "1";
+        }else{
+            $input['is_admin']  = "2";
+        }
+        $user       = User::find($id);
+        // dd($user);
+        $result     = $user->update($input);
+        return redirect()->route('worker.index');
     }
 
     /**
