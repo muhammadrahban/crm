@@ -45,6 +45,7 @@ class userlistcontroller extends Controller
     public function changeStatus(Request $request, User $user)
     {
         $validator = Validator::make($request->all(),[
+            'is_admin'   =>   'required',
             'status'     =>  'required',
         ]);
         if ($validator->fails())
