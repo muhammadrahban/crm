@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WorkerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('home');
 
     Route::resource('worker', WorkerController::class);
+    Route::resource('product', ProductController::class);
+    Route::resource('category', CategoryController::class);
 
 });
 

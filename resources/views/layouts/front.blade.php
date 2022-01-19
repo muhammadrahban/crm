@@ -74,9 +74,9 @@
                             </a>
                             <div class="collapse" id="collapseItems" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">List Items</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Add Item</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Categories</a>
+                                    <a class="nav-link" href="{{route('product.index')}}">List Items</a>
+                                    <a class="nav-link" href="{{route('product.create')}}">Add Item</a>
+                                    <a class="nav-link" href="{{route('category.index')}}">Categories</a>
                                 </nav>
                             </div>
                         </div>
@@ -87,18 +87,6 @@
                 @section('content')
 
                 @show
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2021</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
