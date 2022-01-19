@@ -16,7 +16,7 @@ class usercontroller extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name'                      =>  'required|max:255',
+            'name'                      =>  'required|max:255|unique:users,name',
             'password'                  =>  'required|confirmed',
             'password_confirmation'     =>  'required',
             'device_token'              =>  'nullable',
@@ -32,7 +32,7 @@ class usercontroller extends Controller
         $input['password']          =   Hash::make($input['password']);
         $user                       =   User::create($input);
         $success['token']           =   $user->createToken('MyApp')->accessToken;
-        $success['name']            =   $user->name;
+        $success['user']            =   $user;
 
         return response()->json(['success'=>$success], $this->successStatus);
     }
@@ -61,6 +61,7 @@ class usercontroller extends Controller
                 else{
                     $user->update(['device_token' => $request->device_token]);
                     $success['token'] = $user->createToken('MyApp')->accessToken;
+                    $success['user']  = $user;
                     return response()->json(['success' => $success], $this->successStatus);
                 }
             }
