@@ -49,7 +49,16 @@
                                 <td>{{$user->created_at->diffForHumans() }}</td>
                                 <td>
                                     <a href="{{route('worker.edit', $user->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
-                                    <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                    <a href="{{ route('worker.destroy') }}"
+                                        onclick="event.preventDefault();
+                                        document.getElementById('worker_delete').submit();">
+                                        <button type="button" class="btn btn-danger" ><i class="far fa-trash-alt"></i></button>
+                                    </a>
+                                    <form id="worker_delete" action="{{ route('worker.destroy') }}" method="POST" class="d-none">
+                                        @method('delete')
+                                        @csrf
+                                    </form>
+
                                 </td>
                             </tr>
                         @endforeach
