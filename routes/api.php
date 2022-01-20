@@ -32,6 +32,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('UserList', [userlistcontroller::class, 'index']);
     Route::post('UserCreate', [userlistcontroller::class, 'create']);
     Route::put('changeStatus/{user}', [userlistcontroller::class, 'changeStatus']);
-
-
+    Route::post('destroyUser', [userlistcontroller::class, 'destroyUser']);
 });
