@@ -42,6 +42,22 @@ class userlistcontroller extends Controller
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
+    public function destroyUser(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'id'                      =>  'required',
+        ]);
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()], $this->errorStatus);
+        }
+        dd($request);
+        User::find($request->id)->delete();
+        $success['message'] = "delete User Successfully";
+
+        return response()->json(['success'=>$success], $this->successStatus);
+    }
+
     public function changeStatus(Request $request, User $user)
     {
         $validator = Validator::make($request->all(),[
