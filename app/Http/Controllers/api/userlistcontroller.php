@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\product;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,5 +64,18 @@ class userlistcontroller extends Controller
         $user->update($input);
 
         return response()->json(['success'=>$user], $this->successStatus);
+    }
+
+    public function listItems()
+    {
+        $product = product::all();
+        return response()->json(['success'=>$product], $this->successStatus);
+    }
+
+    public function singleItem($id)
+    {
+        $cat_product = product::find($id);
+        $product = product::where('cat_id', $cat_product->cat_id)->get();
+        return response()->json(['success'=>$product], $this->successStatus);
     }
 }
