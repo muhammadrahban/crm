@@ -11,8 +11,19 @@ class item extends Model
 
     protected $fillable = [
         'order_id',
-        'name',
+        'item_id',
         'quantity',
         'status'
     ];
+
+    /**
+     * Get the product associated with the item
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function product()
+    {
+        return $this->hasOne(product::class, 'id', 'item_id');
+    }
+
 }

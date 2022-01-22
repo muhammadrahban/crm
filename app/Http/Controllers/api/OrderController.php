@@ -22,7 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = order::with(['items', 'cargo'])->get();
+        $order = order::with(['items.product', 'cargo'])->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -63,10 +63,10 @@ class OrderController extends Controller
         $orders   =  order::create($input);
         $int = 0;
         $items = [];
-        foreach($request->name as $item){
+        foreach($request->item_id as $item){
             $data = [
                 'order_id'     => $orders->id,
-                'name'         => $item,
+                'item_id'      => $item,
                 'quantity'     => $input['quantity'][$int],
                 'status'       => $input['status'][$int],
             ];
@@ -90,7 +90,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = order::with(['items', 'cargo'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -102,7 +102,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $order = order::with(['items', 'cargo'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -136,10 +136,10 @@ class OrderController extends Controller
 
         $int = 0;
         $items = [];
-        foreach($request->name as $item){
+        foreach($request->item_id as $item){
             $data = [
                 'order_id'     => $order->id,
-                'name'         => $item,
+                'item_id'      => $item,
                 'quantity'     => $input['quantity'][$int],
                 'status'       => $input['status'][$int],
             ];
