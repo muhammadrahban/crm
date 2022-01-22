@@ -27,4 +27,14 @@ class order extends Model
     {
         return $this->hasMany(item::class, 'order_id', 'id');
     }
+
+    /**
+     * Get the cargo associated with the order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function cargo()
+    {
+        return $this->hasOne(cargo::class, 'id', 'cargo_id');
+    }
 }

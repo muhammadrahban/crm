@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = category::all();
+        return view('product.list_categories', compact('categories'));
     }
 
     /**
@@ -24,7 +25,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $isEdit = false;
+        $categories = category::where('child', 0)->get();
+        return view('product.add_category', compact('isEdit', 'categories'));
     }
 
     /**
@@ -35,7 +38,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'                    =>  'required|max:255',
+            'child'                   =>  'required',
+        ]);
+
+        $input                      =   $request->all();
+        $user                       =   category::create($input);
+
+        return redirect()->route('category.index');
     }
 
     /**
@@ -57,7 +68,9 @@ class CategoryController extends Controller
      */
     public function edit(category $category)
     {
-        //
+        $isEdit = true;
+        $categories = category::where('child', 0)->get();
+        return view('product.add_category', compact('isEdit', 'category', 'categories') );
     }
 
     /**
@@ -69,7 +82,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, category $category)
     {
-        //
+        $request->validate([
+            'name'                    =>  'required|max:255',
+            'child'                   =>  'required',
+        ]);
+
+        $input      = $request->all();
+        $category->update($input);
+        return redirect()->route('category.index');
     }
 
     /**
@@ -80,6 +100,7 @@ class CategoryController extends Controller
      */
     public function destroy(category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('category.index');
     }
 }

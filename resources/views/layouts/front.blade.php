@@ -66,7 +66,6 @@
                                 </nav>
                             </div>
 
-                            <div class="sb-sidenav-menu-heading">Addons</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="false" aria-controls="collapseItems">
                                 <div class="sb-nav-link-icon"><i class="fas fa-item"></i></div>
                                 Items
@@ -76,7 +75,18 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="{{route('product.index')}}">List Items</a>
                                     <a class="nav-link" href="{{route('product.create')}}">Add Item</a>
-                                    <a class="nav-link" href="{{route('category.index')}}">Categories</a>
+                                </nav>
+                            </div>
+
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategorites" aria-expanded="false" aria-controls="collapseCategorites">
+                                <div class="sb-nav-link-icon"><i class="fas fa-item"></i></div>
+                                Category
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseCategorites" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{{route('category.index')}}">List Categories</a>
+                                    <a class="nav-link" href="{{route('category.create')}}">Add category</a>
                                 </nav>
                             </div>
                         </div>

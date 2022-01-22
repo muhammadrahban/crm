@@ -22,7 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = order::with('items')->get();
+        $order = order::with(['items', 'cargo'])->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -46,6 +46,9 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'type'              => 'required',
+            'user_id'           => 'required',
+            'no_item'           => 'required',
+            'total_no_item'     => 'required',
             'customer_name'     => 'required',
             'carteen_no'        => 'required',
             'cargo_id'          => 'required',
@@ -87,7 +90,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = order::with('items')->where('id', $id)->get();
+        $order = order::with(['items', 'cargo'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -99,7 +102,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $order = order::with('items')->where('id', $id)->get();
+        $order = order::with(['items', 'cargo'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -117,6 +120,9 @@ class OrderController extends Controller
             'customer_name'     => 'required',
             'carteen_no'        => 'required',
             'cargo_id'          => 'required',
+            'user_id'           => 'required',
+            'no_item'           => 'required',
+            'total_no_item'     => 'required',
             'remarks'           => 'required',
             'status'            => 'required',
         ]);

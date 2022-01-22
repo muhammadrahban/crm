@@ -8,14 +8,14 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Workers</h1>
+        <h1 class="mt-4">Categories</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">List Workers</li>
+            <li class="breadcrumb-item active">List Categories</li>
         </ol>
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                List Workers
+                List Categories
             </div>
             <div class="card-body">
                 <table id="datatablesSimple">
@@ -23,9 +23,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th>Parent Category</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -33,28 +31,25 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th>Parent Category</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($categories as $cat)
                             <tr>
-                                <td>{{$user->id}}</td>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->is_admin == '1' ? "Admin" : "worker"}}</td>
-                                <td>{{$user->status == '1' ? "Active" : "Inactive"}}</td>
-                                <td>{{$user->created_at->diffForHumans() }}</td>
+                                <td>{{$cat->id}}</td>
+                                <td>{{$cat->name}}</td>
+                                <td>{{$cat->child == 0 ? 'Main Category' : 'Sub Category'}}</td>
+                                <td>{{$cat->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{route('worker.edit', $user->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
-                                    <a href="{{ route('worker.destroy', $user->id) }}"
+                                    <a href="{{route('category.edit', $cat->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
+                                    <a href="{{ route('category.destroy', $cat->id) }}"
                                         onclick="event.preventDefault();
-                                        document.getElementById('worker_delete{{$user->id}}').submit();">
+                                        document.getElementById('product_delete{{$cat->id}}').submit();">
                                         <button type="button" class="btn btn-danger" ><i class="far fa-trash-alt"></i></button>
                                     </a>
-                                    <form id="worker_delete{{$user->id}}"  action="{{ route('worker.destroy', $user->id) }}" method="POST" class="d-none">
+                                    <form id="product_delete{{$cat->id}}"  action="{{ route('category.destroy', $cat->id) }}" method="POST" class="d-none">
                                         @method('delete')
                                         @csrf
                                     </form>

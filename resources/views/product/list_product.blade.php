@@ -8,53 +8,48 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Workers</h1>
+        <h1 class="mt-4">Items</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">List Workers</li>
+            <li class="breadcrumb-item active">List Items</li>
         </ol>
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                List Workers
+                List Items
             </div>
             <div class="card-body">
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th>Item Name</th>
+                            <th>Category</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th>Item Name</th>
+                            <th>Category</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($product as $pro)
                             <tr>
-                                <td>{{$user->id}}</td>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->is_admin == '1' ? "Admin" : "worker"}}</td>
-                                <td>{{$user->status == '1' ? "Active" : "Inactive"}}</td>
-                                <td>{{$user->created_at->diffForHumans() }}</td>
+                                <td>{{$pro->id}}</td>
+                                <td>{{$pro->name}}</td>
+                                <td>{{$pro->category->name}}</td>
+                                <td>{{$pro->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{route('worker.edit', $user->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
-                                    <a href="{{ route('worker.destroy', $user->id) }}"
+                                    <a href="{{route('product.edit', $pro->id )}}"><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
+                                    <a href="{{ route('product.destroy', $pro->id) }}"
                                         onclick="event.preventDefault();
-                                        document.getElementById('worker_delete{{$user->id}}').submit();">
+                                        document.getElementById('product_delete{{$pro->id}}').submit();">
                                         <button type="button" class="btn btn-danger" ><i class="far fa-trash-alt"></i></button>
                                     </a>
-                                    <form id="worker_delete{{$user->id}}"  action="{{ route('worker.destroy', $user->id) }}" method="POST" class="d-none">
+                                    <form id="product_delete{{$pro->id}}"  action="{{ route('product.destroy', $pro->id) }}" method="POST" class="d-none">
                                         @method('delete')
                                         @csrf
                                     </form>

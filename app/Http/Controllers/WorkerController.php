@@ -117,6 +117,8 @@ class WorkerController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
+        // dd($id);
+        User::find($id)->delete();
+        return redirect()->route('worker.index');
     }
 }
