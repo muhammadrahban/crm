@@ -28,6 +28,7 @@ Route::post('/login', [usercontroller::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::resource('cargo', cargocontroller::class);
     Route::resource('order', OrderController::class);
+    Route::get('customersearch', [OrderController::class, 'CustomerSearch']);
 
     Route::get('UserList', [userlistcontroller::class, 'index']);
     Route::post('UserCreate', [userlistcontroller::class, 'create']);

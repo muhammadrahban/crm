@@ -11,6 +11,9 @@ class order extends Model
 
     protected $fillable = [
         'type',
+        'order_ticket',
+        'no_item',
+        'total_no_item',
         'customer_name',
         'carteen_no',
         'cargo_id',
@@ -36,5 +39,25 @@ class order extends Model
     public function cargo()
     {
         return $this->hasOne(cargo::class, 'id', 'cargo_id');
+    }
+
+    /**
+     * Get all of the activity for the order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(activity::class, 'order_id', 'id');
+    }
+
+    /**
+     * Get the customer associated with the order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function customer()
+    {
+        return $this->hasOne(customer::class, 'id', 'customer_name');
     }
 }

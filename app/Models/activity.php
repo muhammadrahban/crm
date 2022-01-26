@@ -5,25 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class item extends Model
+class activity extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'order_id',
-        'name',
-        'quantity',
-        'status'
+        'user_id',
+        'status',
     ];
 
     /**
-     * Get the product associated with the item
+     * Get the user associated with the activity
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function product()
+    public function user()
     {
-        return $this->hasOne(product::class, 'id', 'item_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
-
 }
