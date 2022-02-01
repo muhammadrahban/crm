@@ -40,4 +40,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('updateitem/{item}', [userlistcontroller::class, 'updateitem']);
     Route::put('orderstatus/{id}', [OrderController::class, 'orderstatus']);
     Route::post('ordersearch', [OrderController::class, 'OrderSearch']);
+
+    Route::get('customerlist', [userlistcontroller::class, 'customerlist']);
+    Route::get('customerorder/{id}', [userlistcontroller::class, 'customerorder']);
 });

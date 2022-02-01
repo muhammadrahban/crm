@@ -158,16 +158,17 @@ class OrderController extends Controller
             'no_item'           => 'required',
             'total_no_item'     => 'required',
             'remarks'           => 'required',
-            'status'            => 'required',
+            'order_status'      => 'required',
+            'items'             => 'required',
         ]);
         if ($validator->fails())
         {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-        $customers = customer::where('name', $request->customer_id);get();
-        $input                  =  $request->all();
+        $customers = customer::where('name', $request->customer_id)->get();
+        $input                    = $request->all();
         if ($customers) {
-            $input['customer_id'] = $customers->id;
+            $input['customer_id'] = $customers[0]['id'];
         }else{
             $customer = customer::create([
                 'name'          =>  $request->customer_id
@@ -175,26 +176,27 @@ class OrderController extends Controller
             $input['customer_id'] = $customer->id;
         }
         $order->update($input);
-        item::where('id', $order->id)->delete();
+        item::where('order_id', $order->id)->delete();
 
         $int = 0;
         $items = [];
-        foreach($request->name as $item){
+        $itemss = json_decode($request->items);
+        foreach($itemss as $key => $item){
             $data = [
-                'order_id'          => $orders->id,
-                'name'              => $item,
-                'quantity'          => $input['quantity'][$int],
-                'detail'            => $input['detail'][$int],
-                'actual_quantity'   => $input['actual_quantity'][$int],
-                'status'            => $input['status'][$int],
+                'order_id'          => $order->id,
+                'name'              => $item->name,
+                'quantity'          => $item->quantity,
+                'actual_quantity'   => !empty($item->actual_quantity) ? $item->actual_quantity : '0',
+                'detail'            => $item->detail,
+                'status'            => $item->status,
             ];
-            $items[] = item::create($data);
+            $items[]  =   item::create($data);
             $int++;
         }
         $activityInsert = [
-            'order_id'              => $orders->id,
+            'order_id'              => $order->id,
             'user_id'               => $request->user_id,
-            'status'                => $request->status,
+            'status'                => $request->order_status,
             'is_back'               => !empty($request->is_back) ? $request->is_back : NULL ,
             'user_check'            => !empty($request->user_check) ? $request->user_check : NULL,
         ];

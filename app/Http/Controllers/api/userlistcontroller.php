@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\product;
+use App\Models\customer;
 use App\Models\item;
+use App\Models\order;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -90,8 +92,22 @@ class userlistcontroller extends Controller
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
         $input = $request->all();
+        !empty($input['actual_quantity']) ? $input['actual_quantity'] : $input['actual_quantity'] = "0";
         $item->update($input);
         $all_items = item::where('order_id', $item->order_id)->get();
         return response()->json(['success' => $all_items], $this->successStatus);
+    }
+
+    public function customerlist(){
+        $customer = customer::withCount('order')->get();
+        return response()->json(['success' => $customer], $this->successStatus);
+    }
+
+    public function customerorder($id){
+        // $customer = $customer->with('order')->get();
+        // return response()->json(['success' => $customer], $this->successStatus);
+
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->where('customer_id', $id)->get();
+        return response()->json(['success' => $order], $this->successStatus);
     }
 }

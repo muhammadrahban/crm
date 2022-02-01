@@ -49,7 +49,7 @@ class order extends Model
      */
     public function activity()
     {
-        return $this->hasMany(activity::class, 'order_id', 'id');
+        return $this->hasMany(activity::class, 'order_id', 'id')->orderBy('created_at', 'DESC');
     }
 
     /**
