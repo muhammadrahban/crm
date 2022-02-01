@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\product;
+use App\Models\item;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,5 +78,20 @@ class userlistcontroller extends Controller
         $cat_product = product::find($id);
         $product = product::where('cat_id', $cat_product->cat_id)->get();
         return response()->json(['success'=>$product], $this->successStatus);
+    }
+
+    public function updateitem(Request $request, item $item)
+    {
+        $validator = Validator::make($request->all(), [
+            'status'    => 'required',
+        ]);
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()], $this->errorStatus);
+        }
+        $input = $request->all();
+        $item->update($input);
+        $all_items = item::where('order_id', $item->order_id)->get();
+        return response()->json(['success' => $all_items], $this->successStatus);
     }
 }

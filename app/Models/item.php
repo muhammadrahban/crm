@@ -13,7 +13,9 @@ class item extends Model
         'order_id',
         'name',
         'quantity',
-        'status'
+        'status',
+        'actual_quantity',
+        'detail'
     ];
 
     /**

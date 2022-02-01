@@ -36,4 +36,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('destroyUser/{id}', [userlistcontroller::class, 'destroyUser']);
     Route::get('listItems', [userlistcontroller::class, 'listItems']);
     Route::get('singleItem/{id}', [userlistcontroller::class, 'singleItem']);
+
+    Route::put('updateitem/{item}', [userlistcontroller::class, 'updateitem']);
+    Route::put('orderstatus/{id}', [OrderController::class, 'orderstatus']);
+    Route::post('ordersearch', [OrderController::class, 'OrderSearch']);
 });

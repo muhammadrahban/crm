@@ -24,7 +24,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->orderBy('id', 'desc')->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -46,29 +46,33 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         $validator = Validator::make($request->all(), [
             'type'              => 'required',
             'no_item'           => 'required',
             'total_no_item'     => 'required',
-            'customer_name'     => 'required',
+            'customer_id'       => 'required',
+            'user_id'           => 'required',
             'carteen_no'        => 'required',
             'cargo_id'          => 'required',
             'remarks'           => 'required',
             'order_status'      => 'required',
+            'items'             => 'required',
         ]);
         if ($validator->fails())
         {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
+
         $input                 = $request->all();
-        $customers = customer::where('name', $request->customer_name)->first();
+        $customers = customer::where('name', $request->customer_id)->first();
         if ($customers) {
-            $input['customer_name'] = $customers->id;
+            $input['customer_id'] = $customers->id;
         }else{
             $customer = customer::create([
-                'name'     =>  $request->customer_name
+                'name'     =>  $request->customer_id
             ]);
-            $input['customer_name'] = $customer->id;
+            $input['customer_id'] = $customer->id;
         }
 
         $unique_no = order::orderBy('id', 'DESC')->pluck('id')->first();
@@ -82,14 +86,16 @@ class OrderController extends Controller
         $orders                = order::create($input);
         $int = 0;
         $items = [];
-        foreach($request->name as $item){
+        $itemss = json_decode($request->items);
+        foreach($itemss as $key => $item){
+            // return $item->name;
             $data = [
                 'order_id'          => $orders->id,
-                'name'              => $item,
-                'quantity'          => $input['quantity'][$int],
-                'detail'            => $input['detail'][$int],
-                'actual_quantity'   => $input['actual_quantity'][$int],
-                'status'            => $input['status'][$int],
+                'name'              => $item->name,
+                'quantity'          => $item->quantity,
+                'actual_quantity'   => $item->actual_quantity,
+                'detail'            => $item->detail,
+                'status'            => $item->status,
             ];
             $items[]  =   item::create($data);
             $int++;
@@ -118,7 +124,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -130,7 +136,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -145,7 +151,8 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'type'              => 'required',
-            'customer_name'     => 'required',
+            'customer_id'       => 'required',
+            'user_id'           => 'required',
             'carteen_no'        => 'required',
             'cargo_id'          => 'required',
             'no_item'           => 'required',
@@ -157,15 +164,15 @@ class OrderController extends Controller
         {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-        $customers = customer::where('name', $request->customer_name);get();
+        $customers = customer::where('name', $request->customer_id);get();
         $input                  =  $request->all();
         if ($customers) {
-            $input['customer_name'] = $customers->id;
+            $input['customer_id'] = $customers->id;
         }else{
             $customer = customer::create([
-                'name'     =>  $request->customer_name
+                'name'          =>  $request->customer_id
             ]);
-            $input['customer_name'] = $customer->id;
+            $input['customer_id'] = $customer->id;
         }
         $order->update($input);
         item::where('id', $order->id)->delete();
@@ -214,6 +221,58 @@ class OrderController extends Controller
 
     public function CustomerSearch(){
         $name = customer::select('name')->get();
+        return response()->json(['success' => $name], $this->successStatus);
+    }
+
+    public function orderstatus(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'user_id'           => 'required',
+            'order_status'      => 'required',
+        ]);
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()], $this->errorStatus);
+        }
+        $input = $request->all();
+        $order = order::find($id);
+        $order->update($input);
+        $activityInsert = [
+            'order_id'              => $order->id,
+            'user_id'               => $request->user_id,
+            'status'                => $request->order_status,
+            'is_back'               => !empty($request->is_back) ? $request->is_back : NULL,
+            'user_check'            => !empty($request->user_check) ? $request->user_check : NULL,
+        ];
+        $activity   = activity::create($activityInsert);
+        $success    = [
+            'status' => $order->order_status
+        ];
+        return response()->json(['success' => $success], $this->successStatus);
+    }
+
+    public function OrderSearch(Request $request){
+
+        $order_id   = $request->order_ticket;
+        $date       = $request->date;
+        $item       = $request->item;
+        $name       = $request->name;
+
+        $name = order::with('customer', 'items')->when(!empty($order_id) , function ($query) use($order_id){
+                            return $query->where('order_ticket', 'LIKE', '%'.$order_id.'%');
+                        })->when(!empty($date) , function ($query) use($date){
+                            return $query->where('created_at', 'LIKE', '%'.$date.'%');
+                        })->when(!empty($name) , function ($query) use($name){
+                            return $query->whereHas('customer', function ($q) use ($name){
+                                return $q->where('name', 'LIKE', '%'.$name.'%');
+                            });
+                        })->when(!empty($item) , function ($query) use($item){
+                            return $query->whereHas('items', function ($q) use ($item){
+                                return $q->where('name', 'LIKE', '%'.$item.'%');
+                            });
+                        })
+                        ->latest()
+                        ->get();
+
         return response()->json(['success' => $name], $this->successStatus);
     }
 }

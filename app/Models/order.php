@@ -14,7 +14,8 @@ class order extends Model
         'order_ticket',
         'no_item',
         'total_no_item',
-        'customer_name',
+        'customer_id',
+        'user_id',
         'carteen_no',
         'cargo_id',
         'remarks',
@@ -58,6 +59,16 @@ class order extends Model
      */
     public function customer()
     {
-        return $this->hasOne(customer::class, 'id', 'customer_name');
+        return $this->hasOne(customer::class, 'id', 'customer_id');
+    }
+
+    /**
+     * Get the user associated with the order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

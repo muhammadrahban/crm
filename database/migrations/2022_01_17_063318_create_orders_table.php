@@ -19,7 +19,8 @@ class CreateOrdersTable extends Migration
             $table->string('order_ticket');
             $table->integer('no_item');
             $table->integer('total_no_item');
-            $table->string('customer_name');
+            $table->string('customer_id');
+            $table->string('user_id');
             $table->integer('carteen_no');
             $table->integer('cargo_id');
             $table->string('remarks');
