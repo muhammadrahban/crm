@@ -9,7 +9,16 @@
         <meta name="author" content="" />
         <title>Login - CRM</title>
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
+        <script src="{{url('')}}/js/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link href=" {{asset('css/styles.css') }} " rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+        <link rel="manifest" href="{{url('')}}/manifest.json">
+        <link rel="manifest" href="{{url('')}}/firebase-messaging-sw.js">
+
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-messaging.js"></script>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -23,6 +32,7 @@
                                     <div class="card-body">
                                         <form method="POST" action="{{ route('login') }}">
                                             @csrf
+                                            <input type="hidden" name="device_token" id="device_token">
                                             <div class="form-floating mb-3">
                                                 <input class="form-control  @error('email') is-invalid @enderror" id="username" type="text" placeholder="name@example.com" name="name" value="{{ old('email') }}" required autocomplete="email" autofocus />
                                                 <label for="username">Username</label>
@@ -79,5 +89,7 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{ asset('js/scripts.js') }}"></script>
+        <script src="{{url('')}}/js/firbase.js"></script>
+
     </body>
 </html>

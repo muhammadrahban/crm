@@ -9,6 +9,7 @@
         <title> @yield('title')  - CRM</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href=" {{asset('css/styles.css') }} " rel="stylesheet" />
+        <script src="{{url('')}}/js/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
         <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
         <link rel="manifest" href="{{url('')}}/manifest.json">

@@ -7,7 +7,6 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
-use App\Models\WebUser;
 class Notification extends Model
 {
     public $fillable = ['to','from','message','read_at','resend'];

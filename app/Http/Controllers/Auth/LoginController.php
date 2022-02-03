@@ -42,19 +42,20 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // dd($request);
         $input = $request->all();
         $this->validate($request, [
             'name' => 'required',
             'password' => 'required',
+            'device_token' => 'required',
         ]);
         // $fieldType = filter_var($request->name, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
         $fieldType = 'name';
+
         if (auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password']))) {
+            auth()->user()->update(['device_token'=>$request->device_token]);
             return redirect()->route('home');
         } else {
-            return redirect()->route('login')
-                ->with('error', 'Email-Address And Password Are Wrong.');
+            return redirect()->route('login')->with('error', 'Email-Address And Password Are Wrong.');
         }
     }
 }
