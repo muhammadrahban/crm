@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
 use App\Models\item;
-use App\Models\activity;
+use App\Models\User;
 use App\Models\order;
+use App\Models\activity;
 use App\Models\customer;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -107,11 +109,19 @@ class OrderController extends Controller
             'status'                => $request->order_status,
         ];
         $activity   =   activity::create($activityInsert);
-        // dd($activity);
         $order = order::with(['items.product', 'cargo', 'activity.user'])->where('id', $orders->id)->get();
         $success = [
             'order' => $order,
         ];
+
+        $user_name   = User::find($request->user_id);
+        if ($request->type == 1) {
+            $message = "New Order Created From ".$user_name;
+            $notification = new Notification;
+            $from       =  'HP Plus';
+            $users = User::all();
+            $notification->toMultipleDevice($users, $from,$message,null,null);
+        }
 
         return response()->json(['success'=>$success], $this->successStatus);
     }
