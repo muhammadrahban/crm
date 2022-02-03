@@ -24,7 +24,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->orderBy('id', 'desc')->get();
+        $order = order::with(['items.product', 'cargo', 'customer', 'activity.user'])->orderBy('id', 'desc')->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -256,10 +256,10 @@ class OrderController extends Controller
 
         $order_id   = $request->order_ticket;
         $date       = $request->date;
-        $item       = $request->item;
-        $name       = $request->name;
+        $item       = $request->item_name;
+        $name       = $request->customer_name;
 
-        $name = order::with('customer', 'items')->when(!empty($order_id) , function ($query) use($order_id){
+        $name = order::with('customer', 'items', 'cargo', 'activity.user')->when(!empty($order_id) , function ($query) use($order_id){
                             return $query->where('order_ticket', 'LIKE', '%'.$order_id.'%');
                         })->when(!empty($date) , function ($query) use($date){
                             return $query->where('created_at', 'LIKE', '%'.$date.'%');

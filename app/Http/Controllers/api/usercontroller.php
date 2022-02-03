@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class usercontroller extends Controller
 {
@@ -40,16 +41,15 @@ class usercontroller extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name'      =>  'required',
-            'password'  =>  'required',
+            'name'              =>  'required',
+            'password'          =>  'required',
+            'device_token'      =>  'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-
         $user = User::where('name',$request->name)->first();
-
         if($user)
         {
             if(Hash::check($request->password, $user['password']))
@@ -71,4 +71,17 @@ class usercontroller extends Controller
             return response()->json(['error' => 'This email does not exist'], $this->errorStatus);
         }
     }
+
+    public function logout(Request $request)
+    {
+        DB::table('oauth_access_tokens')
+        ->where('user_id', $request->user_id)
+        ->update([
+            'revoked' => true
+        ]);
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ], $this->successStatus);
+    }
+
 }

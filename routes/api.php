@@ -31,6 +31,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('customersearch', [OrderController::class, 'CustomerSearch']);
 
     Route::get('UserList', [userlistcontroller::class, 'index']);
+    Route::get('UserList/{id}', [userlistcontroller::class, 'show']);
     Route::post('UserCreate', [userlistcontroller::class, 'create']);
     Route::put('changeStatus/{user}', [userlistcontroller::class, 'changeStatus']);
     Route::delete('destroyUser/{id}', [userlistcontroller::class, 'destroyUser']);
@@ -43,4 +44,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('customerlist', [userlistcontroller::class, 'customerlist']);
     Route::get('customerorder/{id}', [userlistcontroller::class, 'customerorder']);
+
+    Route::post('/logout', [usercontroller::class, 'logout']);
 });

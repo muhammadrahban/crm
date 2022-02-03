@@ -23,6 +23,12 @@ class userlistcontroller extends Controller
         return response()->json(['success' => $user], $this->successStatus);
     }
 
+    public function show($id)
+    {
+        $user = User::find($id);
+        return response()->json(['success' => $user], $this->successStatus);
+    }
+
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(),[

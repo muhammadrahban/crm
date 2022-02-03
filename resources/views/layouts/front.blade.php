@@ -10,6 +10,11 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href=" {{asset('css/styles.css') }} " rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+        <link rel="manifest" href="{{url('')}}/manifest.json">
+        <link rel="manifest" href="{{url('')}}/firebase-messaging-sw.js">
+
+        <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-messaging.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -106,5 +111,7 @@
         <script src="{{ asset('assets/demo/chart-bar-demo.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
+        <script src="{{url('')}}/js/firbase.js"></script>
+
     </body>
 </html>
