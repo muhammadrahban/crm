@@ -20,7 +20,6 @@ class usercontroller extends Controller
             'name'                      =>  'required|max:255|unique:users,name',
             'password'                  =>  'required|confirmed',
             'password_confirmation'     =>  'required',
-            'device_token'              =>  'nullable',
         ]);
         if ($validator->fails())
         {
