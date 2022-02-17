@@ -26,7 +26,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = order::with(['items.product', 'cargo', 'customer', 'activity.user'])->orderBy('id', 'desc')->get();
+        $order = order::with(['items.product', 'cargo', 'customer', 'activity.user', 'user'])
+        ->orderBy('id', 'desc')->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -109,7 +110,7 @@ class OrderController extends Controller
             'status'                => $request->order_status,
         ];
         $activity   =   activity::create($activityInsert);
-        $order = order::with(['items.product', 'cargo', 'activity.user'])->where('id', $orders->id)->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'user'])->where('id', $orders->id)->get();
         $success = [
             'order' => $order,
         ];
@@ -120,7 +121,7 @@ class OrderController extends Controller
             $notification = new Notification;
             $from       =  'HP Plus';
             $users = User::all();
-            $notification->toMultipleDevice($users, $from,$message,null,null);
+            // $notification->toMultipleDevice($users, $from,$message,null,null);
         }
 
         return response()->json(['success'=>$success], $this->successStatus);
@@ -134,7 +135,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer', 'user'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -146,7 +147,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer'])->where('id', $id)->get();
+        $order = order::with(['items.product', 'cargo', 'activity.user', 'customer', 'user'])->where('id', $id)->get();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -211,7 +212,7 @@ class OrderController extends Controller
             'user_check'            => !empty($request->user_check) ? $request->user_check : NULL,
         ];
         $activity   = activity::create($activityInsert);
-        $orders     = order::with(['items.product', 'cargo', 'activity.user'])->where('id', $order->id)->get();
+        $orders     = order::with(['items.product', 'cargo', 'activity.user', 'user'])->where('id', $order->id)->get();
         $success    = [
             'order' => $orders,
         ];
@@ -245,7 +246,11 @@ class OrderController extends Controller
         {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-        $input = $request->all();
+        $input = $request->only('user_id', 'order_status','carteen_no');
+
+        if (empty($request->carteen_no) || $request->carteen_no == "null" ) {
+            unset($input['carteen_no']);
+        }
         $order = order::find($id);
         $order->update($input);
         $activityInsert = [
@@ -255,6 +260,7 @@ class OrderController extends Controller
             'is_back'               => !empty($request->is_back) ? $request->is_back : NULL,
             'user_check'            => !empty($request->user_check) ? $request->user_check : NULL,
         ];
+
         $activity   = activity::create($activityInsert);
         $success    = [
             'status' => $order->order_status
@@ -269,7 +275,8 @@ class OrderController extends Controller
         $item       = $request->item_name;
         $name       = $request->customer_name;
 
-        $name = order::with('customer', 'items', 'cargo', 'activity.user')->when(!empty($order_id) , function ($query) use($order_id){
+        $name = order::with('customer', 'items', 'cargo', 'activity.user', 'user')
+                        ->when(!empty($order_id) , function ($query) use($order_id){
                             return $query->where('order_ticket', 'LIKE', '%'.$order_id.'%');
                         })->when(!empty($date) , function ($query) use($date){
                             return $query->where('created_at', 'LIKE', '%'.$date.'%');

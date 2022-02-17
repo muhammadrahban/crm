@@ -54,7 +54,7 @@
                                                     </span>
                                                 @enderror
                                             </div>
-
+                                            <input type="hidden" name="device_token" value="123">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 

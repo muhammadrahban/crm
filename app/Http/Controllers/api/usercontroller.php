@@ -48,7 +48,7 @@ class usercontroller extends Controller
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-        $user = User::where('name',$request->name)->first();
+        $user = User::where('name', $request->name)->first();
         if($user)
         {
             if(Hash::check($request->password, $user['password']))
@@ -67,7 +67,7 @@ class usercontroller extends Controller
             return response()->json(['error' => 'Invalid password'], $this->errorStatus);
         }
         else{
-            return response()->json(['error' => 'This email does not exist'], $this->errorStatus);
+            return response()->json(['error' => 'This username does not exist'], $this->errorStatus);
         }
     }
 

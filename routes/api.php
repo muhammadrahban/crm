@@ -30,10 +30,14 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('order', OrderController::class);
     Route::get('customersearch', [OrderController::class, 'CustomerSearch']);
 
+    Route::post('cargosearch', [cargocontroller::class, 'search']);
+    Route::post('cargodetail', [cargocontroller::class, 'cargoDetail']);
+
     Route::get('UserList', [userlistcontroller::class, 'index']);
     Route::get('UserList/{id}', [userlistcontroller::class, 'show']);
     Route::post('UserCreate', [userlistcontroller::class, 'create']);
     Route::put('changeStatus/{user}', [userlistcontroller::class, 'changeStatus']);
+    Route::get('itemActivity/{order}', [userlistcontroller::class, 'get_itemActivity']);
     Route::delete('destroyUser/{id}', [userlistcontroller::class, 'destroyUser']);
     Route::get('listItems', [userlistcontroller::class, 'listItems']);
     Route::get('singleItem/{id}', [userlistcontroller::class, 'singleItem']);
@@ -42,7 +46,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('orderstatus/{id}', [OrderController::class, 'orderstatus']);
     Route::post('ordersearch', [OrderController::class, 'OrderSearch']);
 
-    Route::get('customerlist', [userlistcontroller::class, 'customerlist']);
+    Route::post('customerlist', [userlistcontroller::class, 'customerlist']);
     Route::get('customerorder/{id}', [userlistcontroller::class, 'customerorder']);
 
     Route::post('/logout', [usercontroller::class, 'logout']);

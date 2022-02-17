@@ -72,7 +72,7 @@
                                 </nav>
                             </div>
 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="false" aria-controls="collapseItems">
+                            {{-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="false" aria-controls="collapseItems">
                                 <div class="sb-nav-link-icon"><i class="fas fa-item"></i></div>
                                 Items
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -82,9 +82,9 @@
                                     <a class="nav-link" href="{{route('product.index')}}">List Items</a>
                                     <a class="nav-link" href="{{route('product.create')}}">Add Item</a>
                                 </nav>
-                            </div>
+                            </div> --}}
 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategorites" aria-expanded="false" aria-controls="collapseCategorites">
+                            {{-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCategorites" aria-expanded="false" aria-controls="collapseCategorites">
                                 <div class="sb-nav-link-icon"><i class="fas fa-item"></i></div>
                                 Category
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -94,7 +94,7 @@
                                     <a class="nav-link" href="{{route('category.index')}}">List Categories</a>
                                     <a class="nav-link" href="{{route('category.create')}}">Add category</a>
                                 </nav>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </nav>
