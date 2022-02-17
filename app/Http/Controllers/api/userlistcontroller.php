@@ -163,6 +163,13 @@ class userlistcontroller extends Controller
 
     public function get_itemActivity(order $order){
         $all_items = itemactivivty::with('user', 'item')->where('order_id', $order->id)->latest()->get();
-        return response()->json(['success' => $all_items], $this->successStatus);
+        $data = [];
+        foreach ($all_items as $key => $items) {
+            $data['success'][$key]['status'] = $items->status;
+            $data['success'][$key]['created_at'] = $items->created_at->format('Y-m-d H:i:s');
+            $data['success'][$key]['user'] = $items->user;
+            $data['success'][$key]['item'] = $items->item;
+        }
+        return response()->json($data, $this->successStatus);
     }
 }

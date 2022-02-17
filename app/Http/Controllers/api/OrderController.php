@@ -56,9 +56,7 @@ class OrderController extends Controller
             'total_no_item'     => 'required',
             'customer_id'       => 'required',
             'user_id'           => 'required',
-            'carteen_no'        => 'required',
             'cargo_id'          => 'required',
-            'remarks'           => 'required',
             'order_status'      => 'required',
             'items'             => 'required',
         ]);
@@ -164,11 +162,9 @@ class OrderController extends Controller
             'type'              => 'required',
             'customer_id'       => 'required',
             'user_id'           => 'required',
-            'carteen_no'        => 'required',
             'cargo_id'          => 'required',
             'no_item'           => 'required',
             'total_no_item'     => 'required',
-            'remarks'           => 'required',
             'order_status'      => 'required',
             'items'             => 'required',
         ]);
@@ -176,13 +172,13 @@ class OrderController extends Controller
         {
             return response()->json(['error'=>$validator->errors()], $this->errorStatus);
         }
-        $customers = customer::where('name', $request->customer_id)->get();
         $input                    = $request->all();
+        $customers = customer::where('name', $request->customer_id)->first();
         if ($customers) {
-            $input['customer_id'] = $customers[0]['id'];
+            $input['customer_id'] = $customers->id;
         }else{
             $customer = customer::create([
-                'name'          =>  $request->customer_id
+                'name'     =>  $request->customer_id
             ]);
             $input['customer_id'] = $customer->id;
         }

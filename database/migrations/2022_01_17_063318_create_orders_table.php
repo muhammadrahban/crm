@@ -23,7 +23,7 @@ class CreateOrdersTable extends Migration
             $table->string('user_id');
             $table->integer('carteen_no')->nullable();
             $table->integer('cargo_id');
-            $table->string('remarks');
+            $table->string('remarks')->nullable();
             $table->string('order_status');
             $table->timestamps();
         });
