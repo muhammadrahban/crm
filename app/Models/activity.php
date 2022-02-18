@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use  Carbon\Carbon;
 
 class activity extends Model
 {
     use HasFactory;
-    use DateTimeInterface;
 
     protected $fillable = [
         'order_id',
@@ -16,20 +16,11 @@ class activity extends Model
         'status',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d',
-    ];
-
-    /**
-     * Prepare a date for array / JSON serialization.
-     *
-     * @param  \DateTimeInterface  $date
-     * @return string
-    */
-    protected function serializeDate(DateTimeInterface $date)
+    public function getCreatedAtAttribute($date)
     {
-        return $date->format('Y-m-d g:i a');
+        return Carbon::parse($date)->setTimezone('Asia/Karachi')->format('Y-m-d g:i A');
     }
+
 
     /**
      * Get the user associated with the activity
