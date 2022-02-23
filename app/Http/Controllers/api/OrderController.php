@@ -28,46 +28,6 @@ class OrderController extends Controller
     {
         $order = order::with(['items.product', 'cargo', 'customer', 'activity.user', 'user'])
         ->orderBy('id', 'desc')->get();
-        // $data = [];
-        // foreach ($order as $key => $items) {
-        //     $data['success'][$key]['id'] = $items->id;
-        //     $data['success'][$key]['type'] = $items->type;
-        //     $data['success'][$key]['no_item'] = $items->no_item;
-        //     $data['success'][$key]['total_no_item'] = $items->total_no_item;
-        //     $data['success'][$key]['customer_id'] = $items->customer_id;
-        //     $data['success'][$key]['user_id'] = $items->user_id;
-        //     $data['success'][$key]['carteen_no'] = $items->carteen_no;
-        //     $data['success'][$key]['cargo_id'] = $items->cargo_id;
-        //     $data['success'][$key]['remarks'] = $items->remarks;
-        //     $data['success'][$key]['order_status'] = $items->order_status;
-        //     $data['success'][$key]['created_at'] = $items->created_at;
-        //     $data['success'][$key]['updated_at'] = $items->updated_at;
-        //     // $data['success'][$key]['created_at'] = $items->created_at->format('Y-m-d H:i:s');
-        //     $data['success'][$key]['items'] = $items->items;
-        //     $data['success'][$key]['cargo'] = $items->cargo;
-        //     $data['success'][$key]['customer'] = $items->customer;
-        //     foreach($items->activity as $keys => $activities){
-        //         $data['success'][$key]['activity'][$keys]['id'] = $activities->id;
-        //         $data['success'][$key]['activity'][$keys]['order_id'] = $activities->order_id;
-        //         $data['success'][$key]['activity'][$keys]['user_id'] = $activities->user_id;
-        //         $data['success'][$key]['activity'][$keys]['status'] = $activities->status;
-        //         $data['success'][$key]['activity'][$keys]['is_back'] = $activities->is_back;
-        //         $data['success'][$key]['activity'][$keys]['user_check'] = $activities->user_check;
-        //         $data['success'][$key]['activity'][$keys]['created_at'] = $activities->created_at->format('Y-m-d H:i:s');
-        //         $data['success'][$key]['activity'][$keys]['updated_at'] = $activities->updated_at;
-        //         // foreach($activities->user as $user_key => $users){
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['id'] = $users->id;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['name'] = $users->name;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['is_admin'] = $users->is_admin;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['status'] = $users->status;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['device_token'] = $users->device_token;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['created_at'] = $users->created_at;
-        //         //     $data['success'][$key]['activity'][$keys]['user'][$user_key]['updated_at'] = $users->updated_at;
-        //         // }
-        //     }
-        //     $data['success'][$key]['user'] = $items->user;
-        // }
-        // return response()->json($data, $this->successStatus);
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -155,11 +115,11 @@ class OrderController extends Controller
 
         $user_name   = User::find($request->user_id);
         if ($request->type == 1) {
-            $message = "New Order Created From ".$user_name;
+            $message = "New Order Created From ".$user_name->name;
             $notification = new Notification;
             $from       =  'HP Plus';
             $users = User::all();
-            // $notification->toMultipleDevice($users, $from,$message,null,null);
+            $notification->toMultiDevice($users, $from,$message,null,null);
         }
 
         return response()->json(['success'=>$success], $this->successStatus);
@@ -223,6 +183,7 @@ class OrderController extends Controller
             $input['customer_id'] = $customer->id;
         }
         $order->update($input);
+        $order_ticket = $order->order_ticket;
         item::where('order_id', $order->id)->delete();
 
         $int = 0;
@@ -253,6 +214,15 @@ class OrderController extends Controller
             'order' => $orders,
         ];
 
+        $user_name   = User::find($request->user_id);
+        if ($request->type == 1) {
+            $message = $order_ticket ." Order Updated From ".$user_name->name;
+            $notification = new Notification;
+            $from       =  'HP Plus';
+            $users = User::all();
+            $notification->toMultiDevice($users, $from,$message,null,null);
+        }
+
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
@@ -264,7 +234,15 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        $order = order::with('items')->where('id', $id)->delete();
+        $order = order::where('id', $id)->first();
+        if ($order->type == 1) {
+            $message = $order->order_ticket ." Order Deleted ";
+            $notification = new Notification;
+            $from       =  'HP Plus';
+            $users = User::all();
+            $notification->toMultiDevice($users, $from,$message,null,null);
+        }
+        order::with('items')->where('id', $id)->delete();
         return response()->json(['success' => $order], $this->successStatus);
     }
 
@@ -301,6 +279,27 @@ class OrderController extends Controller
         $success    = [
             'status' => $order->order_status
         ];
+
+        $user_name   = User::find($request->user_id);
+        if ($order->type == 1) {
+            if($order->order_status == 1){
+                $name_status = "Pending";
+            }else if($order->order_status == 2){
+                $name_status = "packed";
+            }else if($order->order_status == 3){
+                $name_status = "Delivered";
+            }else if($order->order_status == 4){
+                $name_status = "Billed";
+            }else if($order->order_status == 5){
+                $name_status = "Archived";
+            }
+            $message = $order->order_ticket ." Order Status ".$name_status." From ".$user_name->name;
+            $notification = new Notification;
+            $from       =  'HP Plus';
+            $users = User::all();
+            $notification->toMultiDevice($users, $from,$message,null,null);
+        }
+
         return response()->json(['success' => $success], $this->successStatus);
     }
 
